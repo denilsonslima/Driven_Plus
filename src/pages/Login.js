@@ -1,27 +1,76 @@
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { useState,useContext } from "react";
+import UserContext from "../context/context";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import logo from "../assets/img/logo.svg";
+import { VscError } from "react-icons/vsc";
+
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setSenha] = useState("");
+  const [erro, setErro] = useState(false);
+  const navigate = useNavigate()
+  const url = "https://mock-api.driven.com.br/api/v4/driven-plus/auth/login";
+  const valor = useContext(UserContext);
+
+  function autenticar(e) {
+    e.preventDefault();
+    const body = {
+      email,
+      password,
+    };
+    axios
+      .post(url, body)
+      .then((res) => {
+        navigate("subscriptions")
+        valor.setInfo(res.data)
+      })
+      .catch((err) => {
+        setErro(true)
+        console.log(err)
+      });
+  }
+
   return (
     <Main>
       <div>
         <img src={logo} alt="" />
       </div>
-      <form onSubmit={""}>
-        <input type="email" placeholder="E-mail" required />
-        <input type="password" placeholder="Senha" required />
+      <form onSubmit={autenticar}>
+        <input
+          type="email"
+          placeholder="E-mail"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Senha"
+          value={password}
+          onChange={(e) => setSenha(e.target.value)}
+          minLength={4}
+          required
+        />
         <button>ENTRAR</button>
       </form>
       <Link to={"sign-up"}>
         <p>Não possuí uma conta? Cadastre-se</p>
       </Link>
+      {erro && (
+        <div>
+          <VscError />
+          <p>Usuário e/ou senha inválidos!</p>
+        </div>
+      )}
     </Main>
   );
 }
 
 const Main = styled.main`
   width: 85%;
-  > div {
+  > div:nth-of-type(1) {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -35,20 +84,21 @@ const Main = styled.main`
     > input,
     > button {
       width: 100%;
-      height: 52px;
       border-radius: 8px;
       border: none;
     }
     > input {
-      padding-left: 14px;
+      height: 56px;
+      padding: 0 0 0 14px;
+      font-size: 14px;
+      line-height: 16px;
+      border: 2px solid black;
+      outline: 2px solid black;
       ::placeholder {
-        font-size: 14px;
-        line-height: 16px;
         color: #7e7e7e;
       }
       :focus {
-        border: 2px solid black;
-        outline: 2px solid #FF4791;
+        outline-color: #ff4791;
       }
     }
     > input[type="password"] {
@@ -56,10 +106,23 @@ const Main = styled.main`
     }
 
     > button {
+      height: 52px;
       background: #ff4791;
       font-weight: 700;
       color: #fff;
+      cursor: pointer;
     }
+  }
+  > div:nth-of-type(2) {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 5px;
+    color: red;
+    position: absolute;
+    top: 10px;
+    left: 0;
   }
   > a {
     color: #fff;

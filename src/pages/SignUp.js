@@ -2,9 +2,12 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 export default function SignUp() {
+  function autenticar(e){
+    e.preventDefault();
+  }
   return (
     <Main>
-      <form onSubmit={""}>
+      <form onSubmit={autenticar}>
         <input type="text" placeholder="Nome" required />
         <input type="text" placeholder="CPF" required />
         <input type="email" placeholder="E-mail" required />
@@ -27,23 +30,25 @@ const Main = styled.main`
     > input,
     > button {
       width: 100%;
-      height: 52px;
       border-radius: 8px;
       border: none;
     }
     > input {
-      padding-left: 14px;
+      height: 56px;
+      padding: 0 0 0 14px;
+      border: 2px solid black;
+      outline: 2px solid black;
       ::placeholder {
         font-size: 14px;
         line-height: 16px;
         color: #7e7e7e;
       }
       :focus {
-        border: 2px solid black;
-        outline: 2px solid #ff4791;
+        outline-color: #ff4791;
       }
     }
     > button {
+      height: 52px;
       margin-top: 8px;
       background: #ff4791;
       font-weight: 700;
