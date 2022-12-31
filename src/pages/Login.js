@@ -1,15 +1,15 @@
 import axios from "axios";
-import { useState,useContext } from "react";
+import { useState, useContext } from "react";
 import UserContext from "../context/context";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import logo from "../assets/img/logo.svg";
-import { VscError } from "react-icons/vsc";
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from 'react-toastify';
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setSenha] = useState("");
-  const [erro, setErro] = useState(false);
   const navigate = useNavigate()
   const url = "https://mock-api.driven.com.br/api/v4/driven-plus/auth/login";
   const valor = useContext(UserContext);
@@ -27,7 +27,10 @@ export default function Login() {
         valor.setInfo(res.data)
       })
       .catch((err) => {
-        setErro(true)
+        toast.error("Usuário e/ou senha inválidos!", {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 2000
+        })
         console.log(err)
       });
   }
@@ -58,12 +61,6 @@ export default function Login() {
       <Link to={"sign-up"}>
         <p>Não possuí uma conta? Cadastre-se</p>
       </Link>
-      {erro && (
-        <div>
-          <VscError />
-          <p>Usuário e/ou senha inválidos!</p>
-        </div>
-      )}
     </Main>
   );
 }
